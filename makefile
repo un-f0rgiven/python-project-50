@@ -7,7 +7,7 @@ test:
 gen-diff:
 	poetry run gendiff -h
 
-build:
+build: check
 	poetry build
 
 publish:
@@ -22,7 +22,6 @@ lint:
 selfcheck:
 	poetry check
 
-check:
-	selfcheck test lint
+check: selfcheck test lint
 
 .PHONY: install test lint selfcheck check build
