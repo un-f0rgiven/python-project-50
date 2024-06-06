@@ -1,6 +1,16 @@
 import json
 
 
+def convert_numbers(coll):
+    if coll[0] == 0:
+        coll[0] = ' '
+    if coll[0] == 1:
+        coll[0] = '-'
+    if coll[0] == 2:
+        coll[0] = '+'
+    return coll
+
+
 def generate_diff(filepath1, filepath2):
     file1 = json.load(open(str(filepath1)))
     file2 = json.load(open(str(filepath2)))
@@ -17,7 +27,7 @@ def generate_diff(filepath1, filepath2):
     for i in diff_set:
         if file1[i] == file2[i]:
             _f_lst.append([0, i, file1[i]])
-        if file1[i] != file2[i]:
+        else:
             _f_lst.append([1, i, file1[i]])
             _f_lst.append([2, i, file2[i]])
     for i in set1:
@@ -31,14 +41,11 @@ def generate_diff(filepath1, filepath2):
     # [[1, 'follow', False], [0, 'host', 'hexlet.io'],
     # [1, 'proxy', '123.234.53.22'], [1, 'timeout', 50],
     # [2, 'timeout', 20], [2, 'verbose', True]]
+
+    _t_lst = list(map(convert_numbers, _s_lst))
+
     result = ''
-    for s, k, v in _s_lst:
-        if s == 0:
-            s = ' '
-        if s == 1:
-            s = '-'
-        if s == 2:
-            s = '+'
+    for s, k, v in _t_lst:
         result = result + s + ' ' + k + ': ' + str(v).lower() + '\n'
 
     return f'{{\n{result}}}'
