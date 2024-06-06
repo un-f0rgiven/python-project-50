@@ -27,18 +27,18 @@ def generate_diff(filepath1, filepath2):
     # print(_f_lst)
     # [[0, 'host', 'hexlet.io'], [1, 'timeout', 50], [2, 'timeout', 20],
     # [1, 'follow', False], [1, 'proxy', '123.234.53.22'], [2, 'verbose', True]]
-    # _s_lst = sorted(_f_lst, key=lambda x: (x[1]))
+    _s_lst = sorted(_f_lst, key=lambda x: (x[1]))
     # [[1, 'follow', False], [0, 'host', 'hexlet.io'],
     # [1, 'proxy', '123.234.53.22'], [1, 'timeout', 50],
     # [2, 'timeout', 20], [2, 'verbose', True]]
     result = ''
-    # for s, k, v in _s_lst:
-    #     if s == 0:
-    #         s = ' '
-    #     if s == 1:
-    #         s = '-'
-    #     if s == 2:
-    #         s = '+'
-    #     result = result + s + ' ' + k + ': ' + str(v).lower() + '\n'
+    for s, k, v in _s_lst:
+        if s == 0:
+            s = ' '
+        if s == 1:
+            s = '-'
+        if s == 2:
+            s = '+'
+        result = result + s + ' ' + k + ': ' + str(v).lower() + '\n'
 
     return f'{{\n{result}}}'
