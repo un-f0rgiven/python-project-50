@@ -3,3 +3,6 @@
 
 ### Asciinema проверка плоских файлов (JSON)
 https://asciinema.org/a/SJ9PmclcAjmACYVsVbZ1Tq1Wt
+
+### Asciinema проверка плоских файлов (YAML)
+https://asciinema.org/a/PbdBzZr1qT710UEBJ0Nxio9VZ

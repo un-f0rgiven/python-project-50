@@ -1,4 +1,9 @@
+#!/usr/bin/env python3
+
+from parsing import fix_file
+
 import json
+import yaml
 
 
 def convert_numbers(coll):
@@ -12,8 +17,14 @@ def convert_numbers(coll):
 
 
 def generate_diff(filepath1, filepath2):
-    file1 = json.load(open(str(filepath1)))
-    file2 = json.load(open(str(filepath2)))
+    if fix_file(filepath1) == 'json':
+        file1 = json.load(open(str(filepath1)))
+    else:
+        file1 = yaml.load(open(str(filepath1)))
+    if fix_file(filepath2) == 'json':
+        file2 = json.load(open(str(filepath2)))
+    else:
+        file2 = yaml.load(open(str(filepath2)))
     keys1 = list(file1.keys())
     keys2 = list(file2.keys())
     # print(keys1, keys2)
