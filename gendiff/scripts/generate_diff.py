@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from parsing import fix_file
+from gendiff.scripts.parsing import fix_file
 
 import json
 import yaml
