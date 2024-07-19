@@ -2,9 +2,6 @@
 
 from gendiff.scripts.parsing import fix_file
 
-import json
-import yaml
-
 
 def convert_numbers(coll):
     if coll[0] == 0:
@@ -17,17 +14,8 @@ def convert_numbers(coll):
 
 
 def generate_diff(filepath1, filepath2):
-    if fix_file(filepath1) == 'json':
-        file1 = json.load(open(str(filepath1)))
-    else:
-        with open(filepath1) as f1:
-            file1 = yaml.safe_load(f1)
-
-    if fix_file(filepath2) == 'json':
-        file2 = json.load(open(str(filepath2)))
-    else:
-        with open(filepath2) as f2:
-            file2 = yaml.safe_load(f2)
+    file1 = fix_file(filepath1)
+    file2 = fix_file(filepath2)
     keys1 = list(file1.keys())
     keys2 = list(file2.keys())
     # print(keys1, keys2)
