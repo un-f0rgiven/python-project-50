@@ -20,11 +20,14 @@ def generate_diff(filepath1, filepath2):
     if fix_file(filepath1) == 'json':
         file1 = json.load(open(str(filepath1)))
     else:
-        file1 = yaml.load(open(str(filepath1)))
+        with open(filepath1) as f1:
+            file1 = yaml.safe_load(f1)
+
     if fix_file(filepath2) == 'json':
         file2 = json.load(open(str(filepath2)))
     else:
-        file2 = yaml.load(open(str(filepath2)))
+        with open(filepath2) as f2:
+            file2 = yaml.safe_load(f2)
     keys1 = list(file1.keys())
     keys2 = list(file2.keys())
     # print(keys1, keys2)
