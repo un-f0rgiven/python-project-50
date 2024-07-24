@@ -10,8 +10,8 @@ def second_coll_json():
 
 @pytest.fixture
 def first_coll_yml():
-    return 'file1.yaml'
+    return 'file1.yml'
 
 @pytest.fixture
 def second_coll_yml():
-    return 'file2.yaml'
+    return 'file2.yml'
