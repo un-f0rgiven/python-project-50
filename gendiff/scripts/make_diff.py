@@ -1,140 +1,72 @@
 #!/usr/bin/env python3
 
 from massives import a, b
-from fs import mkdir, mkfile, get_children, is_file, is_directory, get_name, get_meta, flatten
+from fs import mkdir, mkfile, get_children, is_file, is_directory, get_name, get_meta, flatten, get_type
 
-# def new_tree(coll):
-#     keys = flatten(coll)
-#     for i in keys:
-#         if type(coll[i]) == dict:
-#             mkdir(i, coll[i])
-#             children = get_children(coll)
-#             list(map(new_tree, children))   
-#         else:
-#             mkfile(i)
+# {'common': {'setting1': 'Value 1', 'setting2': 200, 'setting3': True, 'setting6': {'key': 'value', 'doge': {'wow': ''}}},
+# 'group1': {'baz': 'bas', 'foo': 'bar', 'nest': {'key': 'value'}},
+# 'group2': {'abc': 12345, 'deep': {'id': 45}}}
+
+tree = mkdir('data', a, {})
 
 
 def make_tree(node):
-    tree = mkdir('data', node, 'general')
-    children = get_children(tree)
-    keys = flatten(children)
-    for i in keys:
+    children = get_children(node)
+    new_children = []
+    level = 0
+
+    for i in flatten(children):
         if type(children[i]) == dict:
-            mkdir(i, children[i])
-            # children = get_children(children)
-            # list(map(new_tree, children))   
+            new_children.append(mkdir(i, children[i], {'level': level}))
         else:
-            mkfile(i)
-    return tree
+            new_children.append(mkfile(i, children[i], {'level': level}))
+        level = level + 1
     
+    if is_directory(node):
+        node['children'] = new_children
+
+    for i in new_children:
+        make_tree(i)
+    
+    return node
+
+tree1 = make_tree(tree)
+print(tree1)
 
 def print_tree(node):
-    # print(get_name(node))
-    # if is_file(node):
-    #     return
+    print(get_name(node), get_type(node))
+    if is_file(node):
+        return
     children = get_children(node)
-    print(children)
-    # list(map(print_tree, children))
+    list(map(print_tree, children))
 
-
-tree1 = make_tree(a)
-tree2 = make_tree(b)
-# print(tree1)
 # print_tree(tree1)
-# print(get_name(tree1))
-# children = (get_children(tree1))
-# print(children['common'])
 
-
-
-
-def make_diff(m1, m2):
-    tree = {}
-    keys1 = list(m1.keys())
-    keys2 = list(m2.keys())
-    general_set = set(keys1) & set(keys2)
-    set1 = set(keys1) - set(keys2)
-    set2 = set(keys2) - set(keys1)
-
-    for i in general_set:
-        if is_directory(m1[i]) is True:
-            tree[i] = mkdir(i, m1[i], 'unchanged')
-        else:
-            tree[i] = mkfile(i, 'unchanged')
     
-    for i in set1:
-        if is_directory(m1[i]) is True:
-            tree[i] = mkdir(i, m1[i], 'deleted')
-        else:
-            tree[i] = mkfile(i, 'deleted')
 
-    for i in set2:
-        if is_directory(m2[i]) is True:
-            tree[i] = mkdir(i, m2[i], 'added')
-        else:
-            tree[i] = mkfile(i, 'added')
-
-    return f'keys1 - {keys1}, keys2 - {keys2}, general_set - {general_set}, set1 - {set1}, set2 - {set2}'
-    return tree
-
-
-# print(make_diff(tree1, tree2))
-
-def gen_diff(data1, data2):
-    keys = data1.keys() | data2.keys()
-    result = {}
-    for key in keys:
-        if key not in data1:
-            result[key] = 'added'
-        elif key not in data2:
-            result[key] = 'deleted'
-        elif data1[key] == data2[key]:
-            result[key] = 'unchanged'
-        else:
-            result[key] = 'changed'
-    return result
-
-def flatten(tree):
-    result = []
-
-    def walk(subtree):
-        for item in subtree:
-
-            if isinstance(item, list):
-                walk(item)
-            else:
-                result.append(item)
-    walk(tree)
-
-    return result
-
-def convert(coll):
-    result = {}
-    
-    def walk(subcoll):
-        for i in subcoll:
-            if isinstance(i, tuple):
-                walk(i)
-            result.update({i[0]: i[1]})
-    walk(coll)
-
-    return result
-
-a = [('key', [('key2', 'anotherValue')]), ('key2', 'value2')]
-# ('key', [('key2', 'anotherValue')]) - <class 'tuple'>
-# key - <class 'str'>
-# [('key2', 'anotherValue')] - <class 'list'>
-# ('key2', 'value2') - <class 'tuple'>
-# key2 - <class 'str'>
-# value2 - <class 'str'>
-
-for i in a:
-    keys = []
-    values = []
-    for i in a:
-        keys.append(i[0])
-        values.append(i[1])
-print(keys, values)
+# def gen_diff(data1, data2):
+#     keys = data1.keys() | data2.keys()
+#     result = {}
+#     for key in keys:
+#         if key not in data1:
+#             result[key] = 'added'
+#         elif key not in data2:
+#             result[key] = 'deleted'
+#         elif data1[key] == data2[key]:
+#             result[key] = 'unchanged'
+#         else:
+#             result[key] = 'changed'
+#     return result
 
 
-# print(convert(a))
+# example = ('a', [('b', [('c', []), ('d', [])]), ('e', [('f', [('g', [])])])])
+# flat = {}
+
+def make_flat(tree, dictionary, parent=None):
+    (node, branches) = tree
+    children = []
+    dictionary[node] = (parent, children)
+    for branch in branches:
+        name = make_flat(branch, dictionary, parent=node)
+        children.append(name)
+    return node

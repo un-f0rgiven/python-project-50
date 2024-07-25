@@ -3,10 +3,11 @@ __all__ = (
     'is_file', 'is_directory',
 )
 
-def mkfile(name, meta={}):
+def mkfile(name, value, meta={}):
     """Return file node."""
     return {
         'name': name,
+        'value': value,
         'meta': meta,
         'type': 'file',
     }
@@ -45,6 +46,10 @@ def get_meta(node):
 def get_name(node):
     """Return name of node."""
     return node['name']
+
+def get_type(node):
+    """Return type of node"""
+    return node['type']
 
 
 def flatten(tree):
